@@ -14,3 +14,17 @@
 	  (else (and (or (null? (cdr lst))
 			 (equal? (car lst) (car (cdr lst))))
 		     (all-same? (cdr lst)) )))))
+
+(define my-iota
+  (lambda (n)
+    (let ((max n))
+      (define inner-iota
+	(lambda (n)
+	  (if (equal? n 0) '()
+	      (cons (- max n) (inner-iota (- n 1))))))
+      (inner-iota n) )))
+
+(define my-length
+  (lambda (lst)
+    (if (null? lst) 0
+	(+ 1 (my-length (cdr lst))) )))
