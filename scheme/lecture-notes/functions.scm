@@ -105,3 +105,32 @@
 	  ((list? (car x)) (append (flatten (car x))
 				   (flatten (cdr x))))
 	  (else (cons (car x) (flatten (cdr x)))) )))
+
+;; May 17th
+(define operator2
+  (lambda (e)
+    ((lambda (op)
+       (cond ((equal? op '+) 'addition)
+	     ((equal? op '-) 'subtraction)
+	     ((equal? op '*) 'multiplication)
+	     ((equal? op '/) 'division)
+	     (else 'unknown))) (car e)) ))
+
+(define operator3
+  (lambda (e)
+    (let ((op (car e)))
+      (cond ((equal? op '+) 'addition)
+	    ((equal? op '-) 'subtraction)
+	    ((equal? op '*) 'multiplication)
+	    ((equal? op '/) 'division)
+	    (else 'unknown)) )))
+
+(define my-fold
+  (lambda (f empty-val lst)
+    (cond ((null? lst) empty-val)
+	  (else (f (car lst) (my-fold f empty-val (cdr lst)))) )))
+
+(define my-map
+  (lambda (f lst)
+    (cond ((null? lst) '())
+	  (else (cons (f (car lst)) (my-map f (cdr lst)))) )))
