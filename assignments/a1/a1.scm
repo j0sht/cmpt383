@@ -51,13 +51,13 @@
 (define middle
   (lambda (lst)
     (if (or (null? lst)
-	    (equal? (cdr lst) '())
-	    (equal? (cdr (cdr lst)) '()))
+	    (null? (cdr lst))
+	    (null? (cdr (cdr lst))))
 	'()
 	(let ((rest (cdr lst)))
 	  (define inner-middle
 	    (lambda (lst)
-	      (if (equal? (cdr lst) '())
+	      (if (null? (cdr lst))
 		  '()
 		  (cons (car lst) (inner-middle (cdr lst))))))
 	  (inner-middle rest)))))
@@ -75,3 +75,9 @@
     (if (null? A)
 	B
 	(cons (car A) (my-append (cdr A) B)))))
+
+(define append-all
+  (lambda (lol)
+    (if (null? lol)
+	'()
+	(my-append (car lol) (append-all (cdr lol))))))
