@@ -82,3 +82,34 @@
     (if (null? lol)
 	'()
 	(my-append (car lol) (append-all (cdr lol))))))
+
+;; 12. my-sort
+
+;; 13. all-bits
+(define all-bits
+  (lambda (n)
+    (if (<= n 0)
+	'()
+	(let ((max (- (expt 2 n) 1))
+	      (bits n))
+	  (define inner-bits
+	    (lambda (n)
+	      (let* ((lst (binary n))
+		     (len (my-length lst)))
+		(if (<= n 0)
+		    (cons (my-make-list bits 0) '())
+		    (cons (pad-with-zeroes (- bits len) lst)
+			  (inner-bits (- n 1)))))))
+	  (inner-bits max)))))
+
+(define binary
+  (lambda (n)
+    (if (<= n 0)
+	'()
+	(cons (modulo n 2) (binary (quotient n 2))))))
+
+(define pad-with-zeroes
+  (lambda (n lst)
+    (if (<= n 0)
+	lst
+	(my-append lst (my-make-list n 0)))))
