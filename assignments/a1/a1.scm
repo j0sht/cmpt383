@@ -140,7 +140,7 @@
       (lambda (n left right)
 	(if (null? right)
 	    (my-append left (list n))
-	    (if (< n (car right))
+	    (if (<= n (car right))
 		(my-append left (cons n right))
 		(inner-insert n
 			      (my-append left (list (car right)))
@@ -159,10 +159,10 @@
 	      (bits n))
 	  (define inner-bits
 	    (lambda (n)
-	      (let* ((lst (binary n))
-		     (len (my-length lst)))
-		(if (<= n 0)
-		    (list (my-make-list bits 0))
+	      (if (<= n 0)
+		  (list (my-make-list bits 0))
+		  (let* ((lst (binary n))
+			 (len (my-length lst)))
 		    (cons (pad-with-zeroes (- bits len) lst)
 			  (inner-bits (- n 1)))))))
 	  (inner-bits max)))))
