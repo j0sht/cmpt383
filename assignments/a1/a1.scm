@@ -8,10 +8,10 @@
 
 ;; 2. (my-make-list n x)
 ;;
-;; Returns a list containing n copies of x.
+;; Returns a list containing n copies of x. If n <= 0, returns empty list.
 (define my-make-list
   (lambda (n x)
-    (if (equal? n 0)
+    (if (<= n 0)
 	'()
 	(cons x (my-make-list (- n 1) x)))))
 
@@ -29,13 +29,14 @@
 
 ;; 4. (my-iota n)
 ;;
-;; Returns a list containing the numbers from 0 to n-1.
+;; Returns a list containing the numbers from 0 to n-1. If n <= 0, return
+;; empty list.
 (define my-iota
   (lambda (n)
     (let ((max n))
       (define inner-iota
 	(lambda (n)
-	  (if (equal? n 0)
+	  (if (<= n 0)
 	      '()
 	      (cons (- max n) (inner-iota (- n 1))))))
       (inner-iota n))))
