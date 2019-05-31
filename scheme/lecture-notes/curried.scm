@@ -29,16 +29,26 @@
 
 ;; One of the biggest downfalls of scheme is that it doesn't support currying
 ;; very nicely. Ex) add_b must be called like ((add_b 3) 4), not (add_b 3 4)
-
 (define curry_2
   (lambda (f)
     (lambda (x)
       (lambda (y)
 	(f x y)))))
 
+;; curried versions of standard functions
+(define c_+ (curry_2 +))
+(define c_cons (curry_2 cons))
+(define c_filter (curry_2 filter))
 (define inc ((curry_2 +) 1))
+(define odds ((curry_2 filter) odd?))
+(define add_cherry (c_cons 'cherry))
 
-(define f ((curry_2 filter) odd?))
+;; Homework
+;; Write a function that takes a curried function and returns
+;; an un-curried version
+(define uncurry_2
+  (lambda (f) ;; f is curried, 2 inputs
+    (lambda (x y)
+      ((f x) y))))
 
-;; Homeword
-;; Write a function that takes a curried function and returns an un-curried version
+(define plus (uncurry_2 c_+))
