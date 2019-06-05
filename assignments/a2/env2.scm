@@ -7,12 +7,12 @@
     (insert (cons v val) env)))
 
 (define apply-env
-  (lambda (t v)
-    (if (null? t)
+  (lambda (env v)
+    (if (null? env)
 	(error "apply-env empty environment")
-	(let* ((P (value t))
-	       (L (left t))
-	       (R (right t))
+	(let* ((P (value env))
+	       (L (left env))
+	       (R (right env))
 	       (p-key (get-key P))
 	       (v-key (symbol-hash v)))
 	  (cond
