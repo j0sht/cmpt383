@@ -6,6 +6,17 @@
   (lambda (v val env)
     (insert (cons v val) env)))
 
+;; BST Functions
+;; Citation: Code below is modified version of code found here:
+;; http://www.sfu.ca/~tjd/383summer2019/scheme-intro-cont.html
+;; Under "Example: Binary Search Tree"
+(define (value t) (first t))
+(define (left t) (second t))
+(define (right t) (third t))
+(define get-key
+  (lambda (pair)
+    (symbol-hash (car pair))))
+
 (define apply-env
   (lambda (env v)
     (if (null? env)
@@ -20,30 +31,19 @@
 	   ((< v-key p-key) (apply-env L v))
 	   (else (apply-env R v)))))))
 
-;; BST Functions
-;; Citation: Code below is modified version of code found here:
-;; http://www.sfu.ca/~tjd/383summer2019/scheme-intro-cont.html
-;; Under "Example: Binary Search Tree"
-(define (value t) (first t))
-(define (left t) (second t))
-(define (right t) (third t))
-(define get-key
-  (lambda (pair)
-    (symbol-hash (car pair))))
-
 (define insert
   (lambda (x t)
     (if (null? t)
 	(list x '() '())
-	(let* ((V (value t))
+	(let* ((P (value t))
 	       (L (left t))
 	       (R (right t))
-	       (v-key (get-key V))
+	       (p-key (get-key P))
 	       (x-key (get-key x)))
 	  (cond
-	   ((= x-key v-key) (cons x (cdr t)))
-	   ((< x-key v-key) (list V (insert x L) R))
-	   (else (list V L (insert x R))))))))
+	   ((= x-key p-key) (cons x (cdr t)))
+	   ((< x-key p-key) (list P (insert x L) R))
+	   (else (list P L (insert x R))))))))
 
 ;; Test
 (define test-env

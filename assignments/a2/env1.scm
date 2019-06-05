@@ -8,10 +8,17 @@
 
 (define apply-env
   (lambda (env v)
-    (let ((result (filter (lambda (x) (equal? (car x) v)) env)))
-      (if (null? result)
-	  (error "apply-env: empty environment")
-	  (cdr (car result))))))
+    (if (null? env)
+	(error "apply-env: empty environment")
+	(let* ((pair (car env))
+	       (rest (cdr env))
+	       (var (car pair))
+	       (val (cdr pair))
+	       (v-key (symbol-hash v))
+	       (curr-key (symbol-hash var)))
+	  (if (= v-key curr-key)
+	      val
+	      (apply-env rest v))))))
 
 ;; Test
 (define test-env
