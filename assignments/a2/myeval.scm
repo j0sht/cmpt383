@@ -22,16 +22,16 @@
 	    (operator first-operand second-operand)))))))
 
 ;; Helpers
-(define plus-mult
-  (extend-env '+ + (extend-env '* * (make-empty-env))))
+(define minus-mult
+  (extend-env '- - (extend-env '* * (make-empty-env))))
 
-(define minus-div
-  (extend-env '/ / (extend-env '- - plus-mult)))
+(define div-plus
+  (extend-env '/ / (extend-env '+ + minus-mult)))
 
 (define ebnf-operators
   (extend-env '** expt
-	      (extend-env 'inc (lambda (x) (+ x 1))
-			  (extend-env 'dec (lambda (x) (- x 1)) minus-div))))
+	      (extend-env 'dec (lambda (x) (- x 1))
+			  (extend-env 'inc (lambda (x) (+ x 1)) div-plus))))
 
 ;; To provide helpful error message
 (define (handler x)
