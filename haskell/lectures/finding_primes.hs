@@ -9,3 +9,8 @@ is_prime :: Integer -> Bool
 is_prime n
   | n < 2     = False
   | otherwise = (smallest_divisor n) == n
+
+is_composite :: Integer -> Bool
+is_composite n
+  | n <= 1    = False
+  | otherwise = not (is_prime n)

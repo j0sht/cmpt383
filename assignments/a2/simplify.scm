@@ -7,7 +7,7 @@
       (let ((expr-len (length expr)))
 	(cond ((= 2 expr-len)
 	       (let* ((op (car expr))
-		      (n (car (cdr expr)))
+		      (n (simplify (car (cdr expr))))
 		      (dec (equal? op 'dec))
 		      (inc (equal? op 'inc)))
 		 (if (number? n)
