@@ -140,10 +140,51 @@ all_basic_bit_seqs n
                 [(pad_with_zeros (n-(length (binary x))) (binary x))
                 | x <- [0..(2^n)-1]]
 
+binary :: Int -> [Int]
 binary n
   | n <= 0    = []
   | otherwise = (n `mod` 2) : binary (n `quot` 2)
 
+pad_with_zeros :: Int -> [Int] -> [Int]
 pad_with_zeros n lst
   | n <= 0    = lst
   | otherwise = (myappend lst (replicate n 0))
+
+data List a = Empty | Cons a (List a)
+  deriving Show
+
+-- 13) Implement toList :: [a] -> List a, which converts a regular
+--     Haskell list to a List a
+toList :: [a] -> List a
+toList []     = Empty
+toList (x:xs) = Cons x (toList xs)
+
+-- 14) Implement toHaskellList :: List a -> [a], which converts a List
+--     a to a regular Haskell list
+toHaskellList :: List a -> [a]
+toHaskellList Empty        = []
+toHaskellList (Cons a as)  = a : toHaskellList as
+
+-- 15) Implement append A B, that returns a new List a that consists
+--     of all the elements of A followed by all the elements of B
+append :: List a -> List a -> List a
+append Empty b          = b
+append (Cons a as) b    = Cons a (append as b)
+
+-- 16) Implement the function removeAll f L that returns a List a that
+--     is the same as L but all items satisfying f have been removed.
+--     f is a predicate function of type a -> Bool and L has type List a
+removeAll :: (a -> Bool) -> List a -> List a
+removeAll f Empty       = Empty
+removeAll f (Cons a as) = if f a
+                          then removeAll f as
+                          else Cons a (removeAll f as)
+
+-- 17) Implement sort L, where L has type List a, that returns a new List
+--     a that is a sorted version of L (in ascending order). User either
+--     quicksort or mergesort.
+sort :: Ord a => List a -> List a
+sort Empty       = Empty
+sort (Cons a as) = smalls `append` Cons a Empty `append` bigs
+                   where smalls = sort (removeAll (\x -> x > a) as)
+                         bigs   = sort (removeAll (\x -> x <= a) as)
