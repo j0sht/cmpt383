@@ -137,8 +137,8 @@ all_basic_bit_seqs :: Int -> [[Int]]
 all_basic_bit_seqs n
   | n < 1 = []
   | otherwise = map myreverse
-                [(pad_with_zeros (n-(length (binary x))) (binary x))
-                | x <- [0..(2^n)-1]]
+                [(pad_with_zeros (n-len) bits) | x <- [0..(2^n)-1],
+                 let bits = (binary x), let len = (length bits)]
 
 binary :: Int -> [Int]
 binary n
@@ -150,11 +150,11 @@ pad_with_zeros n lst
   | n <= 0    = lst
   | otherwise = (myappend lst (replicate n 0))
 
+-- 13) Implement toList :: [a] -> List a, which converts a regular
+--     Haskell list to a List a
 data List a = Empty | Cons a (List a)
   deriving Show
 
--- 13) Implement toList :: [a] -> List a, which converts a regular
---     Haskell list to a List a
 toList :: [a] -> List a
 toList []     = Empty
 toList (x:xs) = Cons x (toList xs)
