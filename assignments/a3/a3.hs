@@ -183,6 +183,9 @@ removeAll f (Cons a as) = if f a
 -- 17) Implement sort L, where L has type List a, that returns a new List
 --     a that is a sorted version of L (in ascending order). User either
 --     quicksort or mergesort.
+-- CITATION: sort is a modified version of quicksort found here:
+-- http://www.sfu.ca/~tjd/383summer2019/haskell_functions_lhs.html
+-- Found under "Example: Sorting"
 sort :: Ord a => List a -> List a
 sort Empty       = Empty
 sort (Cons a as) = smalls `append` Cons a Empty `append` bigs
