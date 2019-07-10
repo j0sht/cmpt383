@@ -41,7 +41,6 @@ isNumber s = (numDecimals == 0 || numDecimals == 1) && allDigits
              where numDecimals = length (filter (\x -> x == '.') s)
                    allDigits = all isDigit (filter (\x -> x /= '.') s)
 
-
 singleArgTokenFunc :: Token -> (Token -> Token)
 singleArgTokenFunc Inc = (\(Num a) -> Num (a + 1))
 singleArgTokenFunc Dec = (\(Num a) -> Num (a - 1))
@@ -71,7 +70,7 @@ stackArgTokenFunc MultAll = (\(tokens) ->
 stackManipTokenFunc :: Token -> ([Token] -> [Token])
 stackManipTokenFunc Dup = (\(x:xs) -> x:x:xs)
 stackManipTokenFunc Pop = (\(x:xs) -> xs)
-stackManipTokenFunc Clear = (\(tokens) -> [])
+stackManipTokenFunc Clear = (\(_) -> [])
 stackManipTokenFunc Swap = (\(x1:x2:xs) -> x2:x1:xs)
 
 tokenize :: String -> Token
@@ -119,13 +118,19 @@ isStackArgOp x
   | x == MultAll = True
   | otherwise = False
 
-isStackManipOp :: Token -> Bool
-isStackManipOp x
+isDupOrPop :: Token -> Bool
+isDupOrPop x
   | x == Dup = True
   | x == Pop = True
-  | x == Clear = True
-  | x == Swap = True
   | otherwise = False
+
+isClear :: Token -> Bool
+isClear Clear = True
+isClear _ = False
+
+isSwap :: Token -> Bool
+isSwap Swap = True
+isSwap _ = False
 
 isNumberToken :: Token -> Bool
 isNumberToken (Num _) = True
@@ -146,8 +151,16 @@ reducer acc x
                             (head (tail acc)) (head acc)) :
                            (tail (tail acc))
                       else (Error ((show x) ++ ": not enough args")) : []
-  | isStackArgOp x = ((stackArgTokenFunc x) acc) : []
-  | isStackManipOp x = (stackManipTokenFunc x) acc
+  | isStackArgOp x = if (length acc) > 0
+                     then ((stackArgTokenFunc x) acc) : []
+                     else (Error ((show x) ++ ": empty stack")) : []
+  | isDupOrPop x = if (length acc) > 0
+                   then (stackManipTokenFunc x) acc
+                   else (Error ((show x) ++ ": empty stack")) : []
+  | isSwap x = if (length acc) > 1
+               then (stackManipTokenFunc x) acc
+               else (Error ((show x) ++ ": not enough args")) : []
+  | isClear x = (stackManipTokenFunc x) acc
   | otherwise = acc
   
 
