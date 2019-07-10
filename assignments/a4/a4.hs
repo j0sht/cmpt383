@@ -29,7 +29,10 @@ isDigit x = x `elem` ['0'..'9']
 isNumber :: [Char] -> Bool
 isNumber s = (numDecimals == 0 || numDecimals == 1) && allDigits
              where numDecimals = length (filter (\x -> x == '.') s)
-                   allDigits = all isDigit (filter (\x -> x /= '.') s)
+                   allDigits = all isDigit (filter (\x -> x /= '.' &&
+                                                     x /= '-' && x /= '('
+                                                     && x /= ')')
+                                            s)
 
 singleArgTokenFunc :: Token -> (Token -> Token)
 singleArgTokenFunc Inc = (\(Num a) -> Num (a + 1))
@@ -161,7 +164,7 @@ reducer acc x
                         else acc
   | isSwap x = if len > 1 && (not err)
                then (stackManipTokenFunc x) acc
-               else if notEmptyNotErr
+               else if empty
                     then (Error ((show x) ++ ": not enough args")) : []
                     else acc
   | isClear x = if notEmptyNotErr
