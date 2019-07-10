@@ -24,17 +24,7 @@ instance Show Token where
   show (Error s) = s
 
 isDigit :: Char -> Bool
-isDigit '1' = True
-isDigit '2' = True
-isDigit '3' = True
-isDigit '4' = True
-isDigit '5' = True
-isDigit '6' = True
-isDigit '7' = True
-isDigit '8' = True
-isDigit '9' = True
-isDigit '0' = True
-isDigit _ = False
+isDigit x = x `elem` ['0'..'9']
 
 isNumber :: [Char] -> Bool
 isNumber s = (numDecimals == 0 || numDecimals == 1) && allDigits
@@ -92,37 +82,33 @@ tokenize x
   | x == "clear" = Clear
   | x == "swap" = Swap
   | isNumber x = Num (read x :: Double)
-  | otherwise = Error x
+  | otherwise = Error ("Invalid token: " ++ x)
 
 isSingleArgOp :: Token -> Bool
-isSingleArgOp x
-  | x == Inc = True
-  | x == Dec = True
-  | x == Sqrt = True
-  | x == Sin = True
-  | x == Cos = True
-  | x == Inv = True
-  | otherwise = False
+isSingleArgOp Inc = True
+isSingleArgOp Dec = True
+isSingleArgOp Sqrt = True
+isSingleArgOp Sin = True
+isSingleArgOp Cos = True
+isSingleArgOp Inv = True
+isSingleArgOp _ = False
 
 isDoubleArgOp :: Token -> Bool
-isDoubleArgOp x
-  | x == Plus = True
-  | x == Mult = True
-  | x == Minus = True
-  | x == Div = True
-  | otherwise = False
+isDoubleArgOp Plus = True
+isDoubleArgOp Mult = True
+isDoubleArgOp Minus = True
+isDoubleArgOp Div = True
+isDoubleArgOp _  = False
 
 isStackArgOp :: Token -> Bool
-isStackArgOp x
-  | x == PlusAll = True
-  | x == MultAll = True
-  | otherwise = False
+isStackArgOp PlusAll = True
+isStackArgOp MultAll = True
+isStackArgOp _ = False
 
 isDupOrPop :: Token -> Bool
-isDupOrPop x
-  | x == Dup = True
-  | x == Pop = True
-  | otherwise = False
+isDupOrPop Dup = True
+isDupOrPop Pop = True
+isDupOrPop _ = False
 
 isClear :: Token -> Bool
 isClear Clear = True
@@ -136,33 +122,62 @@ isNumberToken :: Token -> Bool
 isNumberToken (Num _) = True
 isNumberToken _ = False
 
+isError :: Token -> Bool
+isError (Error _) = True
+isError _ = False
 
 calc :: String -> String
 calc s = processStack (map tokenize (words s))
 
 reducer :: [Token] -> Token -> [Token]
 reducer acc x
-  | isNumberToken x = x:acc
-  | isSingleArgOp x = if (length acc) > 0
+  | isNumberToken x = if len > 0 && (not err)
+                      then x:acc
+                      else if len == 0
+                           then x:acc
+                           else acc
+  | isSingleArgOp x = if len > 0 && (not err) && oneNum
                       then ((singleArgTokenFunc x) (head acc)) : (tail acc)
-                      else (Error ((show x) ++ ": empty stack")) : []
-  | isDoubleArgOp x = if (length acc) > 1
+                      else if empty
+                           then (Error ((show x) ++ ": empty stack")) : []
+                           else acc
+  | isDoubleArgOp x = if len > 1 && (not err) && twoNums
                       then ((doubleArgTokenFunc x)
                             (head (tail acc)) (head acc)) :
                            (tail (tail acc))
-                      else (Error ((show x) ++ ": not enough args")) : []
-  | isStackArgOp x = if (length acc) > 0
+                      else if empty || notEmptyNotErr
+                           then (Error ((show x) ++ ": not enough args"))
+                                : []
+                           else acc
+  | isStackArgOp x = if len > 0 && (not err)
                      then ((stackArgTokenFunc x) acc) : []
-                     else (Error ((show x) ++ ": empty stack")) : []
-  | isDupOrPop x = if (length acc) > 0
+                     else if empty
+                          then (Error ((show x) ++ ": empty stack")) : []
+                          else acc
+  | isDupOrPop x = if len > 0 && (not err)
                    then (stackManipTokenFunc x) acc
-                   else (Error ((show x) ++ ": empty stack")) : []
-  | isSwap x = if (length acc) > 1
+                   else if empty
+                        then (Error ((show x) ++ ": empty stack")) : []
+                        else acc
+  | isSwap x = if len > 1 && (not err)
                then (stackManipTokenFunc x) acc
-               else (Error ((show x) ++ ": not enough args")) : []
-  | isClear x = (stackManipTokenFunc x) acc
+               else if notEmptyNotErr
+                    then (Error ((show x) ++ ": not enough args")) : []
+                    else acc
+  | isClear x = if notEmptyNotErr
+                then (stackManipTokenFunc x) acc
+                else acc
+  | isError x = if empty || notEmptyNotErr
+                then x:[]
+                else acc
   | otherwise = acc
-  
+  where len = length acc
+        empty = len == 0
+        err = isError (head acc)
+        notEmptyNotErr = (not empty) && (not err)
+        oneNum = isNumberToken (head acc)
+        twoNums = isNumberToken (head acc) &&
+                  isNumberToken (head (tail acc))
 
 processStack :: [Token] -> String
 processStack tokens = if (length result) > 0
