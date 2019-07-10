@@ -134,7 +134,7 @@ calc s = processStack (map tokenize (words s))
 
 reducer :: [Token] -> Token -> [Token]
 reducer acc x
-  | isNumberToken x = if len > 0 && (not err)
+  | isNumberToken x = if notEmptyNotErr
                       then x:acc
                       else if len == 0
                            then x:acc
@@ -187,3 +187,7 @@ processStack tokens = if (length result) > 0
                       then show (head result)
                       else "empty stack"
   where result = foldl reducer [] tokens
+
+calcStack :: String -> String
+calcStack s = "Top of stack --> " ++ (show result)
+  where result = foldl reducer [] (map tokenize (words s))
