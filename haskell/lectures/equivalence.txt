@@ -1,0 +1,6 @@
+1. Reflexive
+   For all x, x == x
+2. Symmetry
+   For all x,y; if x == y, then y == x
+3. Transitive
+   For all x,y,z; if x == y, y == z, then x == z
