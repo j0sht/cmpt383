@@ -129,9 +129,6 @@ isError :: Token -> Bool
 isError (Error _) = True
 isError _ = False
 
-calc :: String -> String
-calc s = processStack (map tokenize (words s))
-
 reducer :: [Token] -> Token -> [Token]
 reducer acc x
   | isNumberToken x = if notEmptyNotErr
@@ -188,6 +185,10 @@ processStack tokens = if (length result) > 0
                       else "empty stack"
   where result = foldl reducer [] tokens
 
+-- calc and calcStack
+calc :: String -> String
+calc s = processStack (map tokenize (words s))
+
 calcStack :: String -> String
 calcStack s = "Top of stack --> " ++ (show result)
-  where result = foldl reducer [] (map tokenize (words s))
+  where result = reverse (map tokenize (words s))
