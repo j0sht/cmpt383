@@ -1,0 +1,5 @@
+Constraint Problems
+   - CLP(FD)
+     - Constraint logic programming in finite domains
+
+Pythagoerean Triples
