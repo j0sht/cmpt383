@@ -9,12 +9,6 @@ makelist(N, X, [X|Xs]) :-
 % 2. Implement second_min(Lst, M) that calculates the second smallest number
 %    on a list. If the passed-in list has fewer than 2 elements it should
 %    fail. You can assume Lst has no duplicates.
-max(X, Y, X) :- X >= Y.
-max(X, Y, Y) :- X < Y.
-
-second_min([N1,N2|[]], M) :-
-    max(N1, N2, M), !.
-
 second_min(Lst, M) :-
     min_list(Lst, Min),
     delete(Lst, Min, Result),
