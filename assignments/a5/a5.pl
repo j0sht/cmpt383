@@ -36,3 +36,41 @@ all_diff([_]).
 all_diff([H|T]) :-
     \+ member(H, T),
     all_diff(T).
+
+% 5. Implement negpos(L, Neg, NonNeg) that partitions a list L of numbers
+%    into negatives and non-negatives. The order of the numbers in Neg
+%    and NonNeg doesn't matter.
+negpos([], [], []).
+negpos([H|T], [H|As], B) :-
+    H < 0,
+    negpos(T, As, B).
+negpos([H|T], A, [H|Bs]) :-
+    H >= 0,
+    negpos(T, A, Bs).
+
+% 6. Implement magic(L9, Result) that takes a list L9 of 9 numbers as input,
+%    and calculates a permutation of L9 that is magic.
+magic(L9, Result) :-
+    length(L9, Len),
+    Len == 9,
+    permutation(L9, Result),
+    nth0(0, Result, A),
+    nth0(1, Result, B),
+    nth0(2, Result, C),
+    nth0(3, Result, D),
+    nth0(4, Result, E),
+    nth0(5, Result, F),
+    nth0(6, Result, G),
+    nth0(7, Result, H),
+    nth0(8, Result, I),
+    sum_list([A,B,C], Row1),
+    sum_list([D,E,F], Row2),
+    sum_list([G,H,I], Row3),
+    sum_list([A,D,G], Col1),
+    sum_list([B,E,H], Col2),
+    sum_list([C,F,I], Col3),
+    Row1 == Row2,
+    Row2 == Row3,
+    Col1 == Col2,
+    Col2 == Col3,
+    Col3 == Row1.
