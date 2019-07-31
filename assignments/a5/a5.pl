@@ -28,3 +28,11 @@ second_min(Lst, M) :-
     find_min(Lst, Min),
     delete(Lst, Min, Result),
     find_min(Result, M).
+
+% 3. Implement mynumlist(Lo, Hi, Result) that creates a list of numbers
+%    from Lo to Hi. Don't use numlist.
+mynumlist(Hi, Hi, [Hi]).
+mynumlist(Lo, Hi, [Lo|Result]) :-
+    Next is Lo + 1,
+    Next =< Hi,
+    mynumlist(Next, Hi, Result).
