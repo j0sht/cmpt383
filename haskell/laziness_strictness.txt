@@ -1,0 +1,28 @@
+Lazy vs Eager Evaluation:
+  - Example) sqr(3+4)
+    - Two main ways this can be evaluated:
+      1) Eager Evaluation: 3+4 is evaluated first, then sqr
+      2) Lazy evaluation: sqr is evaluated first
+
+Haskell uses Lazy Evaluation for all functions:
+  - ex) fst (sqr 1, sqr2) // sqr 2 is never evaluated
+
+Undefined Values
+  - Mathematically speaking, we can say that 1 `div` 0 has the value
+    undefined
+
+Strictness
+  - A haskell function f is said to be strict f undefined = undefined,
+    otherwise, the function is said to be non-strict.
+  - Lazy evaluation lets Haskell define non-strict functions, such as
+    the three function:
+      three :: Integer -> Integer
+      three x = 3
+
+      > three undefined
+      3
+   - Since Haskell allows non-strict functions to be defined, it is called
+     a non-strict language.
+   - Most mainstream languages are strict
+     - I.e., in a strict language passing an undefined value to a function
+       always results in undefined output.

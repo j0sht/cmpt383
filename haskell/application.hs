@@ -1,0 +1,16 @@
+-- The Application operator '$'
+-- :type ($)
+-- ($) :: (a -> b) -> a -> b
+-- f $ x == f x
+-- What is the point of '$'?
+--  It has the lowest possible precedence for any infix operator.
+--  Recall that for infix operators, it is necessary to assign a precedence
+--   so we know in what order to evaluate them.
+--  So, if you see a '$' in a Haskell expression, it is evaluated last
+--   because it has such low priority. It essentially changes function
+--   application to be right-associative instead of left-associative.
+-- The main use of $ is to simplify some expressions by removing brackets
+-- Ex)
+-- sum (map (+1 [1,2,3])) == sum $ map (+1) [1,2,3]
+-- In this example, 'map (+1) [1,2,3]' is evaluated first, then sum is
+--  applied to its result, which is exactly how we want to do things.
