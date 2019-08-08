@@ -1,0 +1,38 @@
+1. Using English plus simple code examples, explain the difference between
+   arrays and slices in Go
+
+   A) An array is a data structure containing a contiguous set of elements
+      of fixed size. Both the type of element and size of the array are part
+      of the arrays type.
+      A slice is a view of contiguous elements of an existing array. The type
+      of the slice is the type of its elements, but not its size. Slices
+      can grow and shrink in size (arrays can't). The built-in copy function
+      can be used to make a copy of a slice, and the built-in append function
+      can be used to ass a new element to the end of a slice.
+
+      arr := [5]int // an array of five ints initialized to 0
+      sl  := arr[:] // a slice of all five elements in arr
+
+2. Using English plus a simple code example, give a major reason why Go
+   does not let you pass a slice to a function that expects an array
+
+   A) Because any function that expects an array also expects that array
+      to be of certain length. Slices can be variable lengths (i.e. they
+      do not have a fixed length that is part of their type) and the slice
+      may not be the same size as the expected array.
+
+      func sum(p [3]float64) float64 {
+      	   return p[0] + p[1] + p[2]
+      }
+
+      sl := []{5, 6} // a slice of length 2
+      // calling sum(sl) doesn't work
+
+3. Write a function called vc_count(s string) that returns the number of
+   vowels and consonant in s. A vowel is one of: a,e,i,o,u,y; and consonants
+   are all letters that are not vowels, plus y. So y should be counted as
+   both a vowel and a consonant. You must use a ranged for-loop (in a
+   sensible way) in your solution.
+
+   See q3.go:
+   
